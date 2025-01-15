@@ -8,8 +8,8 @@
 	Author URI: https://www.wpkube.com/
 	Contributors: WPKube
 	Requires at least: 4.1
-	Tested up to: 6.5
-	Version: 20240511
+	Tested up to: 6.7
+	Version: 20250114
 	Requires PHP: 5.2
 	Text Domain: scf
 	Domain Path: /languages
@@ -38,7 +38,7 @@ if (!function_exists('add_action')) die();
 
 
 $scf_wp_vers = '4.1';
-$scf_version = '20240511';
+$scf_version = '20250114';
 $scf_plugin  = esc_html__('Simple Basic Contact Form', 'scf');
 $scf_options = get_option('scf_options');
 $scf_path    = plugin_basename(__FILE__); // 'simple-basic-contact-form/simple-basic-contact-form.php';
@@ -175,6 +175,39 @@ function scf_input_filter() {
 
 	$nonce = isset($_POST['scf-nonce']) ? sanitize_text_field($_POST['scf-nonce']) : false;
 	$key   = isset($_POST['scf-key'])   ? sanitize_text_field($_POST['scf-key'])   : false;
+
+	/**
+	 * Start sanitize $style
+	 */
+
+	// make sure it matches the expected format
+	if ( ! preg_match('/^style="(.*?)"$/', $style, $matches)) {
+		$style = '';
+
+	// if it does clean up
+	} else {
+
+		$cssContent = $matches[1];
+		$cssPattern = '/^([\w-]+\s*:\s*[^;"{}]*;\s*)*[\w-]+\s*:\s*[^;"{}]*$/';
+		if (!preg_match($cssPattern, $cssContent)) {
+			$style = '';
+		}
+
+		// remove potentially harmful content
+		$cssContent = preg_replace('/javascript:|expression|behavior|moz-binding|@import|@charset/i', '', $cssContent);
+		
+		// clean up extra spaces and normalize
+		$cssContent = preg_replace('/\s+/', ' ', trim($cssContent));
+		
+		// generate final style attribute
+		$style = 'style="' . $cssContent . '"';
+
+	}
+
+	/**
+	 * End sanitize $style
+	 */
+
 
 	$pass = true;
 
@@ -1183,7 +1216,7 @@ function scf_render_form() {
 	<style type="text/css">
 		.mm-panel-overview {
 			padding: 0 15px 15px 150px;
-			background-image: url(<?php echo plugins_url('/simple-basic-contact-form/sbcf-icon.png'); ?>);
+			background-image: url(<?php echo esc_url( plugins_url('/simple-basic-contact-form/sbcf-icon.png') ); ?>);
 			background-repeat: no-repeat; background-position: 15px 0; background-size: 130px 130px;
 			}
 		#mm-plugin-options h1 small { line-height: 12px; font-size: 12px; color: #bbb; }

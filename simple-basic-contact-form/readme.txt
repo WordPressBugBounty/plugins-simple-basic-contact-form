@@ -8,8 +8,8 @@ Author: WPKube
 Author URI: https://wpkube.com/
 Contributors: WPKube
 Requires at least: 4.1
-Tested up to: 6.5
-Stable tag: 20240511
+Tested up to: 6.7
+Stable tag: 20250114
 Requires PHP: 5.2
 Text Domain: scf
 Domain Path: /languages
@@ -144,6 +144,10 @@ Keep in mind that if your site is example.com and you use john@somethingelse.com
 So, it's best to keep this setting to be an existing email address located on the same domain as your site.
 
 == Changelog ==
+
+**20250114**
+
+* Fixed security issues
 
 **20240511**
 
